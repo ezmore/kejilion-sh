@@ -1418,8 +1418,8 @@ case $choice in
       ~/.acme.sh/acme.sh --register-account -m xxxx@gmail.com --issue -d $yuming --standalone --key-file /home/web/certs/${yuming}_key.pem --cert-file /home/web/certs/${yuming}_cert.pem --force
 
       docker start nginx
-
-      docker run -d -p 3099:8080 --name go-proxy-bingai --restart=unless-stopped adams549659584/go-proxy-bingai
+#此处3099:8080，改为8080:8080.增加参数--net=host
+      docker run -d -p 8080:8080 --name go-proxy-bingai --net=host --restart=unless-stopped adams549659584/go-proxy-bingai
 
       # Get external IP address
       external_ip=$(curl -s ipv4.ip.sb)
@@ -1427,7 +1427,8 @@ case $choice in
       wget -O /home/web/conf.d/$yuming.conf https://raw.githubusercontent.com/ezmore/kejilion-nginx/main/reverse-proxy.conf
       sed -i "s/yuming.com/$yuming/g" /home/web/conf.d/$yuming.conf
       sed -i "s/0.0.0.0/$external_ip/g" /home/web/conf.d/$yuming.conf
-      sed -i "s/0000/3099/g" /home/web/conf.d/$yuming.conf
+      #此处3099改成8080
+      sed -i "s/0000/8080/g" /home/web/conf.d/$yuming.conf
 
       docker restart nginx
 
